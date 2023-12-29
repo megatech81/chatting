@@ -117,5 +117,8 @@
       }
     }
   },
-  "defaultProject": "getstream-chat-angular-example"
+  "defaultProject": "getstream-chat-angular-example",
+  "cli": {
+    "analytics": false
+  }
 }
