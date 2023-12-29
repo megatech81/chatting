@@ -1,27 +1,19 @@
-import { Component, OnInit } from '@angular/core';
-import { WebSocketService } from './web-socket.service';
+import { Component } from '@angular/core';
+import { Router } from '@angular/router';
+import { AuthService } from './features/auth/auth.service';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  styleUrls: ['./app.component.scss']
 })
-export class AppComponent implements OnInit {
-  title = 'Chat Video App';
-  message: string;
-  messages: string[] = [];
+export class AppComponent {
+  title = 'get-stream-io-draft';
+  constructor(public auth: AuthService, private router: Router) {}
 
-  constructor(private webSocketService: WebSocketService) {}
-
-  ngOnInit() {
-    this.webSocketService.connect();
-    this.webSocketService.subscribeToMessages((message) => {
-      this.messages.push(message.content);
+  signOut() {
+    this.auth.signOut().subscribe({
+      next: () => this.router.navigate(['signin'])
     });
-  }
-
-  sendMessage() {
-    this.webSocketService.sendMessage(this.message);
-    this.message = '';
   }
 }

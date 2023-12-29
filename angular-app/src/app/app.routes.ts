@@ -1,9 +1,3 @@
-// app.routes.ts
-
 import { Routes } from '@angular/router';
-import { AppComponent } from './app.component';
 
-export const appRoutes: Routes = [
-  { path: '', component: AppComponent },
-  // Add more routes as needed
-];
+export const routes: Routes = [];
