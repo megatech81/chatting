@@ -7,20 +7,9 @@ pipeline {
         NEXUS_USERNAME = 'jenkins'
         NEXUS_PASSWORD = 'kolla'
         IMAGE_NAME = 'angular-app'
-        GIT_REPO = 'https://github.com/teja13122/chatting.git'
-        GIT_BRANCH = 'master'
     }
 
     stages {
-        stage('Checkout Code') {
-            steps {
-                script {
-                    // Checkout code from Git
-                    git branch: "${GIT_BRANCH}", url: "${GIT_REPO}"
-                }
-            }
-        }
-
         stage('Build') {
             steps {
                 script {
