@@ -9,7 +9,7 @@ pipeline {
         IMAGE_NAME = 'angular-app'
     }
 
-
+    stages {
         stage('Dockerize') {
             steps {
                 script {
