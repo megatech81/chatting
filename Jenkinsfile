@@ -9,16 +9,6 @@ pipeline {
         IMAGE_NAME = 'angular-app'
     }
 
-    stages {
-        stage('Build') {
-            steps {
-                script {
-                    // Build Angular project
-                    sh 'npm install'
-                    sh 'npm run build --prod'
-                }
-            }
-        }
 
         stage('Dockerize') {
             steps {
