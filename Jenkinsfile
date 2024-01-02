@@ -1,35 +1,36 @@
 pipeline {
     agent any
-
     environment {
-        DOCKER_REGISTRY = 'your-docker-registry-url'
-        NEXUS_REGISTRY = 'http://192.168.40.142:8081/repository/Muse-dockerimg/'
-        NEXUS_USERNAME = 'jenkins'
-        NEXUS_PASSWORD = 'kolla'
-        IMAGE_NAME = 'angular-app'
+        NEXUS_CREDS = credentials('nexus')
+        NEXUS_DOCKER_REPO = '192.168.68.72:8082'
     }
 
     stages {
-        stage('Dockerize') {
+       
+       stage('Docker Build') {
+        
+            steps { 
+                    echo 'Building docker Image'
+                    sh 'docker build -t $NEXUS_DOCKER_REPO/fakeweb:$BUILD_NUMBER .'
+                }
+        }
+
+       stage('Docker Login') {
             steps {
-                script {
-                    // Build Docker image
-                    sh "docker build -t $DOCKER_REGISTRY/$IMAGE_NAME ."
-                    sh "docker tag $DOCKER_REGISTRY/$IMAGE_NAME $DOCKER_REGISTRY/$IMAGE_NAME:latest"
+                echo 'Nexus Docker Repository Login'
+                script{
+                    withCredentials([usernamePassword(credentialsId: 'nexus', usernameVariable: 'jenkins', passwordVariable: 'jenkins' )]){
+                       sh ' echo $PASS | docker login -u $USER --password-stdin $NEXUS_DOCKER_REPO'
+                    }
+                   
                 }
             }
         }
 
-        stage('Push to Nexus') {
+        stage('Docker Push') {
             steps {
-                script {
-                    // Log in to Nexus Docker registry
-                    sh "docker login -u $NEXUS_USERNAME -p $NEXUS_PASSWORD $NEXUS_REGISTRY"
-
-                    // Push Docker image to Nexus
-                    sh "docker push $NEXUS_REGISTRY/$IMAGE_NAME:latest"
-                }
+                echo 'Pushing Imgaet to docker hub'
+                sh 'docker push $NEXUS_DOCKER_REPO/fakeweb:$BUILD_NUMBER'
             }
         }
     }
-}
